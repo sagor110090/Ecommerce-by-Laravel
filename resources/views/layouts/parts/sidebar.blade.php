@@ -31,19 +31,22 @@
               </a>
             </li>
 
-            <li class="nav-item {{ Request::is('admin/size*') ? 'active' : '' }}  ">
-              <a class="nav-link" href="{{ route('size.index') }}">
-                <i class="material-icons">content_paste</i>
-                <p>Size Setup</p>
+ 
+
+            <li class="nav-item {{ Request::is('admin/order*') ? 'active' : '' }}">
+              <a class="nav-link" href="{{ route('order.index') }}">
+                <i class="material-icons">library_books</i>
+                <p>Orders</p>
               </a>
             </li>
 
-            <li class="nav-item {{ Request::is('admin/reserve*') ? 'active' : '' }}">
-              <a class="nav-link" href="{{ route('reserve.index') }}">
+            <li class="nav-item {{ Request::is('admin/customer*') ? 'active' : '' }}">
+              <a class="nav-link" href="{{ route('customer.index') }}">
                 <i class="material-icons">library_books</i>
-                <p>Reservation</p>
+                <p>Customer</p>
               </a>
             </li>
+
              <li class="nav-item {{ Request::is('admin/slide*') ? 'active' : '' }}">
               <a class="nav-link" href="{{ route('slide.index') }}">
                 <i class="material-icons">library_books</i>

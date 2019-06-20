@@ -7,8 +7,10 @@ use App\Slider;
 use App\Category;
 use App\Item;
 use App\Reservation;
+use App\Customer;
+use App\Order;
 use Cart;
-
+ 
 
 class HomeController extends Controller
 {
@@ -33,6 +35,14 @@ class HomeController extends Controller
         return view('welcome')->with('slide',$slide)->with('category',$category)->with('item',$item);
         
     }  
+
+    public function about()
+    {
+        
+       
+        return view('about');
+        
+    }   
  
     public function product()
     {
@@ -70,6 +80,49 @@ class HomeController extends Controller
 
 
     }
+
+    public function customer(Request $request)
+    {       //the are reservation my folt
+        
+        $cartCollection = Cart::getContent();
+        $customer = new Customer;
+        $customer->name = $request->name;
+ 
+        //$customer->orders = serialize($cartCollection); 
+        $customer->mobile_no = $request->mobile_no;
+   
+        $customer->address = $request->address;
+        $customer->shipping_address = $request->shipping_address;
+        $customer->shipping_cost = $request->shipping_cost;
+        $customer->total = $request->total;
+        $customer->status = '0';
+        $customer->save();
+
+
+
+        
+
+        foreach ($cartCollection as $cart) {
+            $orders = new Order;
+            $orders->customer_name = $request->name;
+            $orders->product_name = $cart->name;
+            $orders->price = $cart->price;
+            $orders->quantity = $cart->quantity;
+            $orders->save();
+        }
+
+
+
+        
+
+
+
+
+
+        return redirect()->route('welcome');
+
+
+    }
 	
 	
  
@@ -93,16 +146,19 @@ class HomeController extends Controller
 							'attributes' => [
 							
 								'color' =>$request->color,
-								'size'	=>$request->size
+                                'size'	=>$request->size,
+                                'image' =>$request->image
 							
 							],
 							
-						));
+                        ));
+                        
+                        
 					   
                         return view('product')->with('category',$category)->with('item',$item);
 				
 			
-            }
+            } 
 
             public function CartRemove($id)
 			{
@@ -110,7 +166,7 @@ class HomeController extends Controller
                 Cart::remove($id);
                 
                 $cartCollection = Cart::getContent();
-                return view('cart')->with('cartCollection',$cartCollection );
+                return view('cart')->with('cartCollections',$cartCollection );
 			
             }
 
@@ -119,34 +175,31 @@ class HomeController extends Controller
 				
                 $id = $request->id;
                 $quantity = $request->num_product;
-                $quantity1 = $request->old;
-                $quantity2 = $quantity - $quantity1;
-
+            
+               
+                
                 Cart::update($id, array(
-                    'quantity' => $quantity2, 
+                    'quantity' => array(
+                        'relative' => false,
+                        'value' => $quantity
+                    ),
                      // so if the current product has a quantity of 4, it will subtract 1 and will result to 3
                   ));
 					   
                         $cartCollection = Cart::getContent();
-                        return view('cart')->with('cartCollection',$cartCollection );
+                        return redirect()->route('cart')->with('cartCollection',$cartCollection);
 			
 			
             }
 
            
            
-            public function c($id,$quantity)
+            public function chackOut()
 			{
 
 
-                Cart::update($id, array(
-                    'quantity' => $quantity, // so if the current product has a quantity of 4, it will subtract 1 and will result to 3
-                  ));
-                  
-                
-                
-                $cartCollection = Cart::getContent();
-                return view('cart')->with('cartCollection',$cartCollection );
+               
+                return view('cart')->with('cartCollections',$cartCollection );
                // return redirect()->route('cart')->with('cartCollection',$cartCollection );
 
             }
@@ -157,7 +210,7 @@ class HomeController extends Controller
                 
 				 
                 $cartCollection = Cart::getContent();
-                return view('cart')->with('cartCollection',$cartCollection );
+                return view('cart')->with('cartCollections',$cartCollection);
 			
             }
             

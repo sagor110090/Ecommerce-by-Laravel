@@ -2,6 +2,12 @@
 
 @section('content')
 
+@push('css')
+
+<link rel="stylesheet" type="text/css" href="{{ asset('public/frontend/css/tagger.css') }}">
+
+
+@endpush
 
 <div class="col-md-12 ">
     <div class="card ">
@@ -52,7 +58,15 @@
 
 </div>
 
-   
+ @push('script')
+ <script src="{{ asset('public/frontend/js/tagger.js')}}"></script>
+ <script>
+        var t = tagger(document.querySelector('[name="size"]'), {
+          allow_duplicates: false,
+          allow_spaces: true
+        });
+      </script>
+ @endpush  
 
 
 @endsection
